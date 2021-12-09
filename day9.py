@@ -36,24 +36,32 @@ def part1():
 
 
 def find_baisin_size(data: list[list[int]], row: int, col: int) -> int:
-    # pprint(
-    #     [
-    #         data_row[max(col - 6, 0) : min(col + 7, len(data_row))]
-    #         for data_row in data[max(row - 6, 0) : min(row + 7, len(data))]
-    #     ]
-    # )
     baisin_coords = set()
     queue = [(row, col)]
     while queue:
         curr_row, curr_col = queue.pop(0)
-        queue.extend(
+        increasing_neighbours = [
             (neigh_row, neigh_col)
             for neigh_row, neigh_col in set(neighbour_gen(data, curr_row, curr_col)) - baisin_coords
-            if data[curr_row][curr_col] < data[neigh_row][neigh_col]
-        )
+            if (
+                data[curr_row][curr_col] < data[neigh_row][neigh_col]
+                and data[neigh_row][neigh_col] != 9
+            )
+        ]
+        queue.extend(increasing_neighbours)
         baisin_coords.add((curr_row, curr_col))
 
     return len(baisin_coords)
+
+
+def print_cutout(data: list[list[int]], row, col, window_size: int = 12) -> None:
+    size = window_size // 2
+    pprint(
+        [
+            data_row[max(col - size, 0) : min(col + size + 1, len(data_row))]
+            for data_row in data[max(row - size, 0) : min(row + size + 1, len(data))]
+        ]
+    )
 
 
 def part2():
