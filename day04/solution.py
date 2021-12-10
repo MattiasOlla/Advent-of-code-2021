@@ -1,6 +1,6 @@
 from pathlib import Path
 
-data_path = Path(__file__).parent / "data" / "day4.txt"
+data_path = Path(__file__).parent / "data.txt"
 
 
 class Board:

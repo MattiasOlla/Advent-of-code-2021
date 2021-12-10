@@ -2,8 +2,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 
-filepath = Path(__file__)
-data_path = filepath.parent / "data" / f"{filepath.stem}.txt"
+data_path = Path(__file__) / "data.txt"
 
 
 #  aaaa

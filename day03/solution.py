@@ -1,6 +1,6 @@
 from pathlib import Path
 
-data_path = Path(__file__).parent / "data" / "day3.txt"
+data_path = Path(__file__).parent / "data.txt"
 binary_nums = data_path.read_text().splitlines()
 
 # binary_nums = [

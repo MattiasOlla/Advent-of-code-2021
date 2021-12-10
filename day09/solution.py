@@ -4,8 +4,7 @@ from pathlib import Path
 from pprint import pprint
 from typing import Generator
 
-filepath = Path(__file__)
-data_path = filepath.parent / "data" / f"{filepath.stem}.txt"
+data_path = Path(__file__) / "data.txt"
 data = [[int(x) for x in row] for row in data_path.read_text().splitlines()]
 
 

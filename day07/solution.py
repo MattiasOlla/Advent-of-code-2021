@@ -1,8 +1,7 @@
 from pathlib import Path
 from typing import Callable, Generator
 
-filepath = Path(__file__)
-data_path = filepath.parent / "data" / f"{filepath.stem}.txt"
+data_path = Path(__file__) / "data.txt"
 data = [int(x) for x in data_path.read_text().split(",")]
 
 

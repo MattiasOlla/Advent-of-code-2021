@@ -3,7 +3,7 @@ from collections import defaultdict
 from pathlib import Path
 
 filepath = Path(__file__)
-data_path = filepath.parent / "data" / f"{filepath.stem}.txt"
+data_path = filepath.parent / "data.txt"
 
 pattern = re.compile(R"^(\d+),(\d+) -> (\d+),(\d+)$")
 

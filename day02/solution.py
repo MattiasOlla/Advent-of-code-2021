@@ -1,6 +1,6 @@
 from pathlib import Path
 
-data_path = Path(__file__).parent / "data" / "day2.txt"
+data_path = Path(__file__).parent / "data.txt"
 instructions = [line.split() for line in data_path.read_text().splitlines()]
 
 

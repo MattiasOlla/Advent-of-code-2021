@@ -4,7 +4,7 @@ from pathlib import Path
 from textwrap import dedent
 
 filepath = Path(__file__)
-data_path = filepath.parent / "data" / f"{filepath.stem}.txt"
+data_path = filepath.parent / "data.txt"
 data = data_path.read_text().splitlines()
 
 
@@ -63,7 +63,6 @@ def autocomplete_gen(lines: list[str]) -> Generator[int, None, None]:
             score = 0
             for char in reversed(illegal_or_incomplete):
                 score = score * 5 + INCOMPLETE_POINTS[OPEN_CLOSE[char]]
-            print(f"Incomplete: {illegal_or_incomplete}, score: {score}")
             yield score
 
 
