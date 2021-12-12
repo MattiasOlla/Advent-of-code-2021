@@ -30,7 +30,7 @@ solution = Template(
 
 
         if __name__ == "__main__":
-            data = data_path.read_text()
+            data = parse_data(data_path.read_text())
             print(f"Part 1 result: {part1(data)}")
             print(f"Part 2 result: {part2(data)}")
         """
@@ -41,11 +41,17 @@ solution = Template(
 test = Template(
     dedent(
         '''
-        from solution import parse_data, part1, part2
+        from textwrap import dedent
 
-        test_data_str = """
-            """
-        test_data = parse_data(test_data_str)
+        from .solution import parse_data, part1, part2
+
+        test_data = parse_data(
+            dedent(
+                """
+
+                """
+            ).strip()
+        )
 
 
         def test_part1():
@@ -64,6 +70,7 @@ def main(day_num: Optional[int] = None) -> None:
     (folder / "data.txt").touch()
     (folder / "solution.py").write_text(solution.substitute())
     (folder / "test_solution.py").write_text(test.substitute())
+    (folder / "__init__.py").write_text(test.substitute())
 
 
 def make_day_folder(day_num: int) -> Path:

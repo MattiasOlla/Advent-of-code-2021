@@ -1,7 +1,7 @@
 from textwrap import dedent
 from typing import Counter
 
-from solution import find_paths, find_paths_allow_one_twice, parse_data, part1, part2
+from .solution import find_paths, find_paths_allow_one_twice, parse_data, part1, part2
 
 test_data_str = dedent(
     """

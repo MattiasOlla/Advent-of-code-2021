@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from solution import Grid, parse_data, part1, part2
+from .solution import Grid, parse_data, part1, part2
 
 test_data_str1 = dedent(
     """
