@@ -1,9 +1,7 @@
-from collections import defaultdict
-from copy import deepcopy
+from collections import defaultdict, deque
 from dataclasses import dataclass, field
 from pathlib import Path
-from textwrap import dedent
-from typing import Any, Generator, TypeAlias
+from typing import Generator, TypeAlias
 
 DataType: TypeAlias = dict[str, "Cave"]
 
@@ -34,11 +32,15 @@ def parse_data(text: str) -> DataType:
 
 
 class CavePath:
-    def __init__(self, path: list[Cave]) -> None:
-        self.path: list[Cave] = []
-        self.visited: defaultdict[str, int] = defaultdict(int)
-        for cave in path:
-            self.append(cave)
+    def __init__(self, path: list[Cave], visited: defaultdict[str, int] | None = None) -> None:
+        self.path: list[Cave] = path
+        if visited:
+            self.visited = visited
+        else:
+            self.visited: defaultdict[str, int] = defaultdict(int)
+            for cave in self.path:
+                if cave.small:
+                    self.visited[cave.name] += 1
 
         self.allowed_twice = ""
 
@@ -55,7 +57,7 @@ class CavePath:
         return ",".join(cave.name for cave in self.path)
 
     def copy(self) -> "CavePath":
-        new = CavePath(self.path.copy())
+        new = CavePath(self.path.copy(), visited=self.visited.copy())
         new.allowed_twice = self.allowed_twice
         return new
 
@@ -65,9 +67,9 @@ def find_paths(
     start_name: str = "start",
     end_name: str = "end",
 ) -> Generator[CavePath, None, None]:
-    queue = [CavePath([caves[start_name]])]
+    queue = deque([CavePath([caves[start_name]])])
     while queue:
-        curr = queue.pop(0)
+        curr = queue.popleft()
         if curr.last.name == end_name:
             yield curr
             continue
@@ -84,9 +86,9 @@ def find_paths_allow_one_twice(
     start_name: str = "start",
     end_name: str = "end",
 ) -> Generator[CavePath, None, None]:
-    queue = [CavePath([caves[start_name]])]
+    queue = deque([CavePath([caves[start_name]])])
     while queue:
-        curr = queue.pop(0)
+        curr = queue.popleft()
         if curr.last.name == end_name:
             yield curr
             continue
