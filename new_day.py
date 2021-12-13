@@ -10,7 +10,7 @@ solution = Template(
     dedent(
         """
         from pathlib import Path
-        from typing import Any, TypeAlias
+        from typing import TypeAlias
 
         DataType: TypeAlias = Any
 
@@ -55,11 +55,15 @@ test = Template(
 
 
         def test_part1():
-            assert part1(test_data) == 0
+            expected = 0
+            result = part1(test_data)
+            assert result == expected
 
 
-        def test_part2() -> int:
-            return part2(test_data) == 0
+        def test_part2():
+            expected = 0
+            result = part2(test_data)
+            assert result == expected
         '''
     ).lstrip()
 )
@@ -68,9 +72,9 @@ test = Template(
 def main(day_num: Optional[int] = None) -> None:
     folder = make_day_folder(day_num or date.today().day)
     (folder / "data.txt").touch()
+    (folder / "__init__.py").touch()
     (folder / "solution.py").write_text(solution.substitute())
     (folder / "test_solution.py").write_text(test.substitute())
-    (folder / "__init__.py").write_text(test.substitute())
 
 
 def make_day_folder(day_num: int) -> Path:
