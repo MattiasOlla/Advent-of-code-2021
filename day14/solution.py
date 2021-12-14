@@ -20,37 +20,34 @@ def increment_polymer(polymer: str, rules: dict[str, str]) -> str:
 
 
 def counts_recursive(polymer: str, rules: dict[str, str], depth: int) -> Counter:
-    print(f"{depth=}")
     if depth == 0:
         return Counter(polymer)
 
-    new = increment_polymer(polymer, rules)
-    print(new)
-    middle = len(new) // 2
-    first = new[: middle - 1]
-    shared = new[middle]
-    second = new[middle:]
-    return (
-        counts_recursive(first + shared, rules, depth - 1)
-        + counts_recursive(second + shared, rules, depth - 1)
-        - Counter(shared)
-    )
+    polymer = increment_polymer(polymer, rules)
+
+    chunk_size = 10 ** 7
+    counts = Counter()
+
+    for i in range(0, len(polymer), chunk_size):
+        print(f"Level {depth - 1} Processing {i} through {min(i + chunk_size, len(polymer))}")
+        counts += counts_recursive(polymer[i : i + chunk_size + 1], rules, depth - 1)
+        if i > 0:
+            counts[polymer[i]] -= 1
+
+    return counts
 
 
 def part1(data: DataType) -> int:
     polymer, rules = data
-    for _ in range(10):
-        polymer = increment_polymer(polymer, rules)
-    counts = Counter(polymer)
-    # polymer = increment_polymer(polymer, rules)
-    # counts = counts_recursive(polymer, rules, depth=9)
+    counts = counts_recursive(polymer, rules, depth=10)
 
     (_, most_common), *_, (_, least_common) = counts.most_common()
     return most_common - least_common
 
 
 def part2(data: DataType) -> int:
-    counts = counts_recursive(*data, depth=40)
+    polymer, rules = data
+    counts = counts_recursive(polymer, rules, depth=40)
     (_, most_common), *_, (_, least_common) = counts.most_common()
     return most_common - least_common
 
