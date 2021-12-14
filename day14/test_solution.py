@@ -1,5 +1,7 @@
 from textwrap import dedent
 
+import pytest
+
 from .solution import increment_polymer, parse_data, part1, part2
 
 test_data = parse_data(
@@ -45,6 +47,7 @@ def test_part1():
     assert result == expected
 
 
+@pytest.mark.timeout(10)
 def test_part2():
     expected = 2188189693529
     result = part2(test_data)
