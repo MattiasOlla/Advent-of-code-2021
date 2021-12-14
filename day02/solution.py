@@ -24,11 +24,11 @@ def part2():
     for direction, num in instructions:
         num = int(num)
         match direction:
-            case 'forward':
+            case "forward":
                 position = (position[0] + num, position[1] + aim * num)
-            case 'up':
+            case "up":
                 aim -= num
-            case 'down':
+            case "down":
                 aim += num
 
     print(f"Final position: {position}")
