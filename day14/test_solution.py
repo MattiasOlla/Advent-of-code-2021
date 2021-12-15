@@ -1,8 +1,9 @@
 from textwrap import dedent
+from typing import Counter
 
 import pytest
 
-from .solution import increment_polymer, parse_data, part1, part2
+from .solution import count_pairs, parse_data, part1, part2
 
 test_data = parse_data(
     dedent(
@@ -30,14 +31,19 @@ test_data = parse_data(
 )
 
 
-def test_increment_polymer():
+def test_count_pairs():
     polymer, rules = test_data
-    assert increment_polymer(polymer, rules) == "NCNBCHB"
-    assert increment_polymer("NCNBCHB", rules) == "NBCCNBBBCBHCB"
-    assert increment_polymer("NBCCNBBBCBHCB", rules) == "NBBBCNCCNBBNBNBBCHBHHBCHB"
-    assert (
-        increment_polymer("NBBBCNCCNBBNBNBBCHBHHBCHB", rules)
-        == "NBBNBNBBCCNBCNCCNBBNBBNBBBNBBNBBCBHCBHHNHCBBCBHCB"
+    assert count_pairs(polymer, rules, 1) == Counter(
+        {
+            (" ", "N"): 1,
+            ("N", "C"): 1,
+            ("C", "N"): 1,
+            ("N", "B"): 1,
+            ("B", "C"): 1,
+            ("C", "H"): 1,
+            ("H", "B"): 1,
+            ("B", " "): 1,
+        }
     )
 
 

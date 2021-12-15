@@ -1,5 +1,4 @@
 from collections import Counter
-from itertools import chain, zip_longest
 from pathlib import Path
 from typing import TypeAlias
 
@@ -14,42 +13,42 @@ def parse_data(text: str) -> DataType:
     return template, rules
 
 
-def increment_polymer(polymer: str, rules: dict[str, str]) -> str:
-    new_parts = [rules[x1 + x2] for x1, x2 in zip(polymer[:-1], polymer[1:])]
-    return "".join(chain.from_iterable(zip_longest(polymer, new_parts, fillvalue="")))
+def count_pairs(polymer: str, rules: dict[str, str], num_iter: int):
+    pair_map = {(k[0], k[1]): [(k[0], v), (v, k[1])] for k, v in rules.items()}
+
+    pairs = Counter(zip(" " + polymer, polymer + " "))
+    for _ in range(num_iter):
+        counts = Counter()
+        for pair, num in pairs.items():
+            for new_pair in pair_map.get(pair, [pair]):
+                counts[new_pair] += num
+        pairs = counts
+    return pairs
 
 
-def counts_recursive(polymer: str, rules: dict[str, str], depth: int) -> Counter:
-    if depth == 0:
-        return Counter(polymer)
+def pair_counts_to_final(pair_counts: Counter[tuple[str, str]]) -> Counter[str]:
+    double_counts: Counter[str] = Counter()
+    for pair, count in pair_counts.items():
+        for letter in pair:
+            if letter != " ":
+                double_counts[letter] += count
+    return Counter({p: c // 2 for p, c in double_counts.items()})
 
-    polymer = increment_polymer(polymer, rules)
 
-    chunk_size = 10 ** 7
-    counts = Counter()
+def solution(polymer: str, rules: dict[str, str], num_iter: int) -> int:
+    pair_counts = count_pairs(polymer, rules, num_iter)
+    counts = pair_counts_to_final(pair_counts)
 
-    for i in range(0, len(polymer), chunk_size):
-        print(f"Level {depth - 1} Processing {i} through {min(i + chunk_size, len(polymer))}")
-        counts += counts_recursive(polymer[i : i + chunk_size + 1], rules, depth - 1)
-        if i > 0:
-            counts[polymer[i]] -= 1
-
-    return counts
+    (_, most_common), *_, (_, least_common) = counts.most_common()
+    return most_common - least_common
 
 
 def part1(data: DataType) -> int:
-    polymer, rules = data
-    counts = counts_recursive(polymer, rules, depth=10)
-
-    (_, most_common), *_, (_, least_common) = counts.most_common()
-    return most_common - least_common
+    return solution(*data, 10)
 
 
 def part2(data: DataType) -> int:
-    polymer, rules = data
-    counts = counts_recursive(polymer, rules, depth=40)
-    (_, most_common), *_, (_, least_common) = counts.most_common()
-    return most_common - least_common
+    return solution(*data, 40)
 
 
 if __name__ == "__main__":
